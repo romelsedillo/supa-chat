@@ -1,5 +1,6 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "../ui/scroll-area";
 
 const ChatBox = () => {
   const messages = [
@@ -25,20 +26,20 @@ const ChatBox = () => {
     },
   ];
   return (
-    <div className="col-span-9 bg-white">
-      <div>
-        <div className="w-full p-2 flex border border-slate-300">
-          <Avatar className="w-12 h-12 border-2 border-green-500">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col justify-center ml-3">
-            <h2 className="text-sm text-slate-800te">Romel Sedillo</h2>
-            <h3 className="text-xs text-slate-600">@romelsedillo</h3>
-          </div>
+    <div className="col-span-9 bg-white rounded-e-lg">
+      <div className="w-full p-2 flex border-b border-slate-300">
+        <Avatar className="w-12 h-12 border-2 border-green-500">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col justify-center ml-3">
+          <h2 className="text-sm text-slate-800te">Romel Sedillo</h2>
+          <h3 className="text-xs text-slate-600">@romelsedillo</h3>
         </div>
-        <div className="flex flex-col w-full mx-auto h-[500px] border rounded-lg bg-white">
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      </div>
+      <div className="flex flex-col w-full mx-auto h-[480px] bg-white">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <ScrollArea>
             {messages.map((msg) => (
               <div
                 key={msg.id}
@@ -66,19 +67,19 @@ const ChatBox = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </ScrollArea>
+        </div>
 
-          {/* Input Box */}
-          <div className="flex gap-2 p-3 border-t">
-            <input
-              type="text"
-              placeholder="Type a message..."
-              className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none"
-            />
-            <button className="bg-green-500 text-white px-4 py-2 rounded-lg">
-              Send
-            </button>
-          </div>
+        {/* Input Box */}
+        <div className="flex gap-2 p-3 border-t">
+          <input
+            type="text"
+            placeholder="Type a message..."
+            className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none"
+          />
+          <button className="bg-green-500 text-white px-4 py-2 rounded-lg">
+            Send
+          </button>
         </div>
       </div>
     </div>
