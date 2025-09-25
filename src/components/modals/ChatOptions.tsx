@@ -1,41 +1,35 @@
 "use client";
 
 import { CiMenuKebab } from "react-icons/ci";
+import { EllipsisVertical } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import DeleteConversation from "./DeleteConversation";
+import BlockConversation from "./BlockConversation";
 
-const ProfileOptions = () => {
+export default function ChatOptions() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full  cursor-pointer hover:bg-gray-200"
+          className="rounded-full  cursor-pointer hover:bg-gray-700"
         >
-          <CiMenuKebab className="text-sm text-slate-900" />
+          <EllipsisVertical strokeWidth={2} className="text-slate-300" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
-        <DropdownMenuItem onClick={() => alert("Profile Settings")}>
-          Profile Settings
-        </DropdownMenuItem>
+        <DeleteConversation />
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="text-red-600"
-          onClick={() => alert("Logout")}
-        >
-          Logout
-        </DropdownMenuItem>
+        <BlockConversation />
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
-
-export default ProfileOptions;
+}

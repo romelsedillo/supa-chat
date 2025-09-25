@@ -1,86 +1,49 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
-import { toast } from "sonner";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-const supabase = createClientComponentClient();
 
-const LoginForm: React.FC = () => {
+const SignUpForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Regular email/password login
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Signed in successfully!");
-    }
-  };
-
-  // OAuth login
-  const handleOAuthLogin = async (provider: "google" | "github") => {
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success(`Redirecting to ${provider}...`);
-    }
-  };
-
   return (
     <div className="max-w-sm w-full mx-auto p-6 rounded-md shadow-2xl border border-violet-400">
-      <h2 className="text-white text-3xl mb-4 text-center">Sign In</h2>
-      <form
-        onSubmit={handleLogin}
-        autoComplete="on"
-        className="text-foreground max-w-xs mx-auto flex flex-col gap-2"
-      >
+      <h2 className="text-white text-3xl mb-4 text-center">Sign up</h2>
+      <form className="text-foreground max-w-xs mx-auto flex flex-col gap-2">
         <Input
           required
-          placeholder="Email"
-          name="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+          placeholder="Name"
+          type="text"
           className="text-white border border-violet-400 rounded outline-none focus-visible:ring-2 focus-visible:ring-violet-500 placeholder:text-white focus:border-none caret-violet-500"
         />
+
+        <Input
+          required
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          placeholder="Email"
+          type="email"
+          className="text-white border border-violet-400 rounded outline-none focus-visible:ring-2 focus-visible:ring-violet-500 placeholder:text-white focus:border-none caret-violet-500"
+        />
+
         <Input
           required
           placeholder="Password"
-          name="password"
           value={password}
           type={showPassword ? "text" : "password"}
           onChange={(e) => setPassword(e.target.value)}
-          className="text-white border border-violet-400 rounded outline-none focus-visible:ring-2 focus-visible:ring-violet-500 placeholder:text-white focus:border-none caret-violet-500"
+          className="text-white border border-violet-400 rounded outline-none focus-visible:ring-2 focus-visible:ring-violet-400 placeholder:text-white focus:border-none caret-violet-500"
         />
         <div className="flex items-center">
           <Checkbox
@@ -93,54 +56,43 @@ const LoginForm: React.FC = () => {
             Show Password
           </label>
         </div>
+
         <Button
           className="px-4 py-2 rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
           type="submit"
           disabled={loading}
         >
-          {loading ? "Signing in..." : "Sign in"}
+          {loading ? "Signing up..." : "Sign up"}
         </Button>
       </form>
-      <div className="max-w-xs flex items-center justify-end py-2 mx-auto text-xs">
-        <div>
-          <Link
-            href={"/password-recovery"}
-            className="underline font-medium text-white"
-          >
-            Forgot password?
-          </Link>
-        </div>
-      </div>
-      <div className="max-w-xs flex items-center gap-2 py-2 mx-auto">
+
+      <div className="max-w-xs flex items-center gap-2 py-4 mx-auto">
         <hr className="border flex-grow" />
-        <p className="text-xs text-white dark:text-slate-50">
-          Or continue with
-        </p>
+        <p className="text-xs text-white">Or continue with</p>
         <hr className="border flex-grow" />
       </div>
-      <div className="max-w-xs flex flex-col items-center mx-auto py-2 gap-2">
+      <div className="flex flex-col items-center mx-auto gap-2">
         <Button
           type="button"
           className="w-full rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
-          onClick={() => handleOAuthLogin("google")}
         >
           Google
           <FcGoogle className="ml-2" />
         </Button>
         <Button
           type="button"
-          onClick={() => handleOAuthLogin("github")}
           className="w-full rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
         >
           GitHub
           <FaGithub className="ml-2" />
         </Button>
       </div>
-      <div className="mx-auto max-w-xs mt-8">
+
+      <div className="mx-auto max-w-xs mt-4">
         <p className="text-xs text-white">
-          Don&apos;t have an account?{" "}
-          <Link href={"/sign-up"} className="font-medium underline text-white">
-            Sign up here.
+          Already have an account?{" "}
+          <Link href="/" className="font-medium underline">
+            Sign in here.
           </Link>
         </p>
       </div>
@@ -148,4 +100,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default SignUpForm;
