@@ -19,7 +19,7 @@ It allows users to register/login, connect with other chatmates, and send messag
 
 🛠️ Tech Stack
 
-Next.js 14
+Next.js
 – React framework
 
 Supabase
