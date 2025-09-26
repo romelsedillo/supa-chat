@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getUserInfo } from "@/lib/getUserInfo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type UserProfileType = {
   id: string;
@@ -13,10 +14,25 @@ type UserProfileType = {
 
 const UserProfile = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getUserInfo().then(setProfile);
+    getUserInfo()
+      .then(setProfile)
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center">
+        <Skeleton className="w-12 h-12 rounded-full" />
+        <div className="flex flex-col justify-center ml-3 space-y-1">
+          <Skeleton className="h-3 w-24 rounded-md" />
+          <Skeleton className="h-3 w-32 rounded-md" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center">

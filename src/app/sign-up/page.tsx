@@ -1,8 +1,8 @@
 import IllustrationComp from "@/components/layout/IllustrationComp";
-import SignUpForm from "@/components/layout/SignUpForm";
+import SignUpForm from "@/components/forms/SignUpForm";
 const SignUpPage = () => {
   return (
-    <div className="bg-[#0A0A0A] border border-violet-400 rounded-lg h-[560px] w-full overflow-hidden max-w-5xl flex">
+    <div className="bg-[#0A0A0A] border-2 border-gray-800 rounded-lg h-[560px] w-full overflow-hidden max-w-5xl flex">
       {/* Left Section with Title + Illustration */}
       <IllustrationComp />
 

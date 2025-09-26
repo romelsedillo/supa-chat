@@ -8,8 +8,8 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient({ req, res });
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const pathname = req.nextUrl.pathname;
 
@@ -19,12 +19,18 @@ export async function middleware(req: NextRequest) {
   }
 
   // Not logged in → redirect to /login
-  if (!session && pathname !== "/login" && pathname !== "/sign-up") {
+  if (
+    !user &&
+    pathname !== "/login" &&
+    pathname !== "/sign-up" &&
+    pathname !== "/password-recovery" &&
+    pathname !== "/update-password"
+  ) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
   // Logged in but trying to visit login/sign-up → go to chatroom
-  if (session && (pathname === "/login" || pathname === "/sign-up")) {
+  if (user && (pathname === "/login" || pathname === "/sign-up")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 

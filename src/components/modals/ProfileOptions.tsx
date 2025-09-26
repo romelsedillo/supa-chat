@@ -19,12 +19,13 @@ const ProfileOptions = () => {
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
+
     if (error) {
-      toast.error(`Logged out successfully`);
+      toast.error("Failed to log out. Please try again.");
       console.error("Logout error:", error.message);
     } else {
+      toast.success("logged out successful.");
       router.push("/login");
-      toast.success(`Logged out successfully`);
     }
   };
 
