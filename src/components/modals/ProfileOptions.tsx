@@ -18,14 +18,38 @@ const ProfileOptions = () => {
   const supabase = createClientComponentClient();
 
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
+    try {
+      //  get the current user first
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-    if (error) {
-      toast.error("Failed to log out. Please try again.");
-      console.error("Logout error:", error.message);
-    } else {
-      toast.success("logged out successful.");
-      router.push("/login");
+      if (userError) {
+        console.error("Error fetching user before logout:", userError.message);
+      }
+
+      //  update user status to false
+      if (user) {
+        await supabase
+          .from("user_profiles")
+          .update({ is_online: false })
+          .eq("id", user.id);
+      }
+
+      // ✅ Then sign out
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        toast.error("Failed to log out. Please try again.");
+        console.error("Logout error:", error.message);
+      } else {
+        toast.success("Logged out successfully.");
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Unexpected logout error:", error);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 

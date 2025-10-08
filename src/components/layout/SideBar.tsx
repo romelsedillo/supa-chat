@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "../ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -8,6 +7,7 @@ import ChatOptions from "../modals/ChatOptions";
 import ProfileOptions from "../modals/ProfileOptions";
 import UserProfile from "./UserProfile";
 import ChatMateAvatar from "./ChatMateAvatar";
+import SearchUser from "../modals/SearchUser";
 
 const SideBar = () => {
   const chats = [
@@ -71,11 +71,7 @@ const SideBar = () => {
         </div>
       </div>
       <div className="w-full px-2 flex items-center justify-center">
-        <Input
-          type="text"
-          placeholder="Search..."
-          className="flex-1 m-2 placeholder:text-white border border-gray-700 rounded outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus:border-none"
-        />
+        <SearchUser />
       </div>
       <div className="flex flex-col mt-2">
         <ScrollArea className="h-[400px]">
