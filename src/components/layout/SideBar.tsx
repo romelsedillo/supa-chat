@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Input } from "../ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import ChatOptions from "../modals/ChatOptions";

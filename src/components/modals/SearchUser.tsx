@@ -10,10 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import ChatMateAvatar from "@/components/layout/ChatMateAvatar";
 
 import { Plus } from "lucide-react";
 type UserProfile = {

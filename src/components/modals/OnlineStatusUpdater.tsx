@@ -36,7 +36,7 @@ export default function OnlineStatusUpdater() {
 
     window.addEventListener("beforeunload", handleUnload);
     return () => window.removeEventListener("beforeunload", handleUnload);
-  }, []);
+  }, [supabase]);
 
   return null;
 }
