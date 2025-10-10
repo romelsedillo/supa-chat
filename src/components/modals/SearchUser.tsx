@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -18,7 +19,7 @@ type UserProfile = {
   id: string;
   name: string;
   avatar_url?: string;
-  user_status: string;
+  is_online: boolean;
 };
 
 const SearchUser = () => {
@@ -31,7 +32,7 @@ const SearchUser = () => {
 
     const { data, error } = await supabase
       .from("user_profiles")
-      .select("id, name, avatar_url, user_status")
+      .select("id, name, avatar_url, is_online")
       .ilike("name", `%${value}%`)
       .limit(10);
 
@@ -76,28 +77,30 @@ const SearchUser = () => {
           )}
 
           {results.map((user) => (
-            <div
-              key={user.id}
-              className="flex items-center gap-3 p-2 rounded-md hover:bg-accent cursor-pointer"
-            >
-              <div className="relative">
-                <Avatar className=" border-2 border-violet-500">
-                  <AvatarImage src={user.avatar_url} alt={user.name} />
-                  <AvatarFallback>
-                    {user.name.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <span
-                  className={`absolute ${
-                    user.user_status === "online"
-                      ? "bg-green-400"
-                      : "bg-gray-400"
-                  }  rounded-full h-2 w-2 -bottom-0 -right-0`}
-                ></span>
-              </div>
-              <div>
-                <p className="font-medium text-sm">{user.name}</p>
-              </div>
+            <div key={user.id} className="">
+              <DialogClose asChild>
+                <button
+                  className="w-full cursor-pointer flex items-center gap-3 p-2 rounded-md hover:bg-accent"
+                  onClick={() => console.log(user.id)}
+                >
+                  <div className="relative">
+                    <Avatar className=" border-2 border-violet-500">
+                      <AvatarImage src={user.avatar_url} alt={user.name} />
+                      <AvatarFallback>
+                        {user.name.slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span
+                      className={`absolute ${
+                        user.is_online ? "bg-green-400" : "bg-gray-400"
+                      }  rounded-full h-2 w-2 -bottom-0 -right-0`}
+                    ></span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">{user.name}</p>
+                  </div>
+                </button>
+              </DialogClose>
             </div>
           ))}
         </div>
