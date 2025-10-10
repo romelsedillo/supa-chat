@@ -23,7 +23,8 @@ interface ChatStore {
   messages: Message[];
   setSelectedChatmate: (mate: UserProfile | null) => void;
   setConversationId: (id: string | null) => void;
-  setMessages: (msgs: Message[]) => void;
+  // setMessages: (msgs: Message[]) => void;
+  setMessages: (messages: Message[] | ((prev: Message[]) => Message[])) => void;
   addMessage: (msg: Message) => void;
 }
 
@@ -33,7 +34,12 @@ export const useChatStore = create<ChatStore>((set) => ({
   messages: [],
   setSelectedChatmate: (mate) => set({ selectedChatmate: mate }),
   setConversationId: (id) => set({ conversationId: id }),
-  setMessages: (msgs) => set({ messages: msgs }),
+  // setMessages: (msgs) => set({ messages: msgs }),
+  setMessages: (messages) =>
+    set((state) => ({
+      messages:
+        typeof messages === "function" ? messages(state.messages) : messages,
+    })),
   addMessage: (msg) =>
     set((state) => ({
       messages: [...state.messages, msg],

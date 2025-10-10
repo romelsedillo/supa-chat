@@ -4,18 +4,6 @@ import { useEffect, useState } from "react";
 import { useChatStore } from "@/store/chatStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-// types/chat.ts
-export type Message = {
-  sender_id: string;
-  receiver_id: string;
-};
-
-export type UserProfile = {
-  id: string;
-  name: string;
-  avatar_url?: string | null;
-};
-
 export default function ChatMateList() {
   const supabase = createClientComponentClient();
   const { selectedChatmate, setSelectedChatmate } = useChatStore();

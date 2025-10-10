@@ -11,7 +11,6 @@ export default function OnlineStatusUpdater() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        console.log("useEffect runs");
         await supabase
           .from("user_profiles")
           .update({ is_online: true })
