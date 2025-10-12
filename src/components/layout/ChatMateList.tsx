@@ -4,11 +4,20 @@ import { useEffect, useState } from "react";
 import { useChatStore } from "@/store/chatStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
+type UserProfile = {
+  id: string;
+  name: string;
+  avatar_url?: string | null;
+};
+
+
 export default function ChatMateList() {
   const supabase = createClientComponentClient();
   const { selectedChatmate, setSelectedChatmate } = useChatStore();
-  const [chatmates, setChatmates] = useState([]);
+  const [chatmates, setChatmates] = useState<UserProfile[]>([]);
 
+  
+  
   useEffect(() => {
     const fetchChatmates = async () => {
       const { data: userData } = await supabase.auth.getUser();
@@ -42,7 +51,22 @@ export default function ChatMateList() {
     };
 
     fetchChatmates();
-  }, []);
+     const channel = supabase
+    .channel("chatmates-realtime")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "messages" },
+      async (payload) => {
+        // 🔁 Re-fetch chatmates when new message is inserted
+        fetchChatmates();
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+  }, [supabase]);
 
   return (
     <div className="col-span-3 bg-[#111] p-3 text-white rounded-s-lg">

@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useChatStore } from "@/store/chatStore";
 
 import { Plus } from "lucide-react";
 type UserProfile = {
@@ -23,6 +24,7 @@ type UserProfile = {
 };
 
 const SearchUser = () => {
+  const { setSelectedChatmate } = useChatStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<UserProfile[]>([]);
 
@@ -81,7 +83,7 @@ const SearchUser = () => {
               <DialogClose asChild>
                 <button
                   className="w-full cursor-pointer flex items-center gap-3 p-2 rounded-md hover:bg-accent"
-                  onClick={() => console.log(user.id)}
+                  onClick={() => setSelectedChatmate(user)}
                 >
                   <div className="relative">
                     <Avatar className=" border-2 border-violet-500">
