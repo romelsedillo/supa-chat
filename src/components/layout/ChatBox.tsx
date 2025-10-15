@@ -21,6 +21,7 @@ export default function ChatBox() {
   const [newMessage, setNewMessage] = useState("");
   const [conversationID, setConversationId] = useState("");
   const [newConversation, setNewConversation] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getUser = async () => {
@@ -122,7 +123,7 @@ export default function ChatBox() {
   // Sending message function for new conversation
   const sendMessageNewConversation = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     if (!newMessage.trim() || !selectedChatmate || !currentUser) return;
 
     try {
@@ -162,8 +163,6 @@ export default function ChatBox() {
         return;
       }
 
-      console.log("👥 Participants added");
-
       // 3️⃣ Insert the first message
       const { data: messageData, error: messageError } = await supabase
         .from("messages")
@@ -195,6 +194,7 @@ export default function ChatBox() {
     } catch (error) {
       console.error("⚠️ Unexpected error creating conversation:", error);
     }
+    setLoading(false);
   };
   // Sending message function for existing conversation
   const sendMessage = async (e: React.FormEvent) => {
@@ -225,31 +225,33 @@ export default function ChatBox() {
         Select a chatmate
       </div>
     );
-  console.log(newConversation);
   return (
     <div className="col-span-9 flex flex-col p-4 border border-gray-800 rounded-e-lg">
       <h2 className="font-semibold text-white mb-2">
         {selectedChatmate?.name}
       </h2>
-
-      <div className="flex-1 overflow-y-auto bg-[#111] p-3 rounded text-white space-y-2">
-        {messages.map((m) => (
-          <div
-            key={m.id}
-            className={`${
-              m.sender_id === currentUser ? "text-right" : "text-left"
-            }`}
-          >
-            <p
-              className={`inline-block px-3 py-1 rounded-lg ${
-                m.sender_id === currentUser ? "bg-blue-600" : "bg-gray-700"
+      {loading ? (
+        <div className="flex-1 overflow-y-auto bg-[#111] p-3 rounded text-white space-y-2"></div>
+      ) : (
+        <div className="flex-1 overflow-y-auto bg-[#111] p-3 rounded text-white space-y-2">
+          {messages.map((m) => (
+            <div
+              key={m.id}
+              className={`${
+                m.sender_id === currentUser ? "text-right" : "text-left"
               }`}
             >
-              {m.content}
-            </p>
-          </div>
-        ))}
-      </div>
+              <p
+                className={`inline-block px-3 py-1 rounded-lg ${
+                  m.sender_id === currentUser ? "bg-blue-600" : "bg-gray-700"
+                }`}
+              >
+                {m.content}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
 
       <form
         onSubmit={newConversation ? sendMessageNewConversation : sendMessage}
