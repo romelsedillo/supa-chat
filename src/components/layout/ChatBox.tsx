@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useChatStore } from "@/store/chatStore";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabaseClient";
 
 type Message = {
   id: string;
@@ -15,7 +15,6 @@ type Message = {
 };
 
 export default function ChatBox() {
-  const supabase = createClientComponentClient();
   const { selectedChatmate, messages, setMessages } = useChatStore();
   const [currentUser, setCurrentUser] = useState("");
   const [newMessage, setNewMessage] = useState("");
@@ -29,11 +28,12 @@ export default function ChatBox() {
       setCurrentUser(data?.user?.id || "");
     };
     getUser();
-  }, [supabase]);
+  }, []);
 
   // Fetch messages when selectedChatmate changes
   const fetchMessages = useCallback(async () => {
     if (!selectedChatmate) return;
+
     const { data } = await supabase
       .from("messages")
       .select("*")
@@ -46,7 +46,6 @@ export default function ChatBox() {
     if (!data || data.length === 0) {
       // ✅ No existing conversation — this will trigger "new conversation" flow
       setNewConversation(true);
-      console.log("No existing conversation found. Starting a new one.");
       return;
     } else {
       // ✅ Conversation already exists
@@ -58,7 +57,8 @@ export default function ChatBox() {
       setMessages(data);
       setConversationId(data[0].conversation_id);
     }
-  }, [currentUser, selectedChatmate, setMessages, supabase]);
+  }, [currentUser, selectedChatmate, setMessages]);
+
   useEffect(() => {
     fetchMessages();
   }, [fetchMessages, newConversation]);
@@ -118,7 +118,7 @@ export default function ChatBox() {
       supabase.removeChannel(messagesChannel);
       supabase.removeChannel(conversationsChannel);
     };
-  }, [supabase, selectedChatmate, currentUser, setMessages, fetchMessages]);
+  }, [selectedChatmate, currentUser, setMessages, fetchMessages]);
 
   // Sending message function for new conversation
   const sendMessageNewConversation = async (e: React.FormEvent) => {
@@ -127,8 +127,6 @@ export default function ChatBox() {
     if (!newMessage.trim() || !selectedChatmate || !currentUser) return;
 
     try {
-      console.log("🆕 Creating new conversation...");
-
       // 1️⃣ Create the conversation
       const { data: newConversation, error: convoError } = await supabase
         .from("conversations")
@@ -142,7 +140,6 @@ export default function ChatBox() {
       }
 
       const conversationId = newConversation.id;
-      console.log("✅ Conversation created:", conversationId);
 
       // 2️⃣ Add both users to conversation_participants
       const { error: participantsError } = await supabase
@@ -179,8 +176,6 @@ export default function ChatBox() {
         console.error("❌ Error sending first message:", messageError);
         return;
       }
-
-      console.log("💬 First message sent:", messageData);
 
       // 4️⃣ Update conversation timestamps
       const { data: updatedMessages } = await supabase
