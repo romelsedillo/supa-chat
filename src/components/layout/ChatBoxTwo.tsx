@@ -6,6 +6,8 @@ import MessageInput from "../forms/MessageInput";
 import MessageList from "../layout/MessageList";
 import { supabase } from "@/lib/supabaseClient";
 import { useChatStore } from "@/store/chatStore";
+import ChatMateOptions from "../modals/ChatMateOptions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Message = {
   id: string;
@@ -130,11 +132,29 @@ const ChatBoxTwo = () => {
         Select a chatmate
       </div>
     );
+  console.log("Selected Chatmate:", selectedChatmate);
   return (
     <div className="col-span-9 flex flex-col p-4 border border-gray-800 rounded-e-lg">
-      <h2 className="font-semibold text-white mb-2">
-        {selectedChatmate?.name}
-      </h2>
+      <div className="flex items-center gap-2 mb-4">
+        <div className="relative">
+          <Avatar>
+            <AvatarImage src={selectedChatmate.avatar_url || ""} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <div
+            className={`absolute top-6 left-6 w-2 h-2 rounded-full ${
+              selectedChatmate.is_online ? "bg-green-500" : "bg-gray-500"
+            }
+          }`}
+          ></div>
+        </div>
+        <h2 className="font-semibold capitalize text-white mb-2">
+          {selectedChatmate?.name}
+        </h2>
+        <div className="">
+          <ChatMateOptions />
+        </div>
+      </div>
       <MessageList messages={messages} currentUser={currentUser} />
       <MessageInput
         value={newMessage}

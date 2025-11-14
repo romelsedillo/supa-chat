@@ -23,11 +23,11 @@ const MessageList: React.FC<MessageListProps> = ({ messages, currentUser }) => {
     );
   }
   return (
-    <div className="flex-1 overflow-y-auto bg-[#111] p-3 rounded text-white space-y-2">
+    <div className="flex-1 overflow-y-auto bg-[#222] p-3 rounded text-white space-y-2">
       {loading ? (
         <div className="flex-1 overflow-y-auto bg-[#111] p-3 rounded text-white space-y-2"></div>
       ) : (
-        <div className="flex-1 overflow-y-auto bg-[#111] p-3 rounded text-white space-y-2">
+        <div className="flex-1 overflow-y-auto p-3 rounded text-white space-y-2">
           {messages.map((m) => (
             <div
               key={m.id}
@@ -36,7 +36,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, currentUser }) => {
               }`}
             >
               <p
-                className={`inline-block px-3 py-1 rounded-lg ${
+                className={`inline-block text-sm px-3 py-1 rounded ${
                   m.sender_id === currentUser ? "bg-blue-600" : "bg-gray-700"
                 }`}
               >

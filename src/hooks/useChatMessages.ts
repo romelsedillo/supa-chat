@@ -22,7 +22,6 @@ export function useChatMessages(conversationID?: string, currentUser?: string) {
 
   // Sending message function for existing conversation
   const sendMessage = async (e: React.FormEvent) => {
-    alert(newMessage);
     e.preventDefault();
     if (!newMessage.trim() || !selectedChatmate) return;
 
@@ -42,12 +41,10 @@ export function useChatMessages(conversationID?: string, currentUser?: string) {
       .order("created_at", { ascending: true });
 
     if (data) setMessages(data);
-    alert("sendMessage called");
   };
 
   // Sending message function for new conversation
   const sendMessageNewConversation = async (e: React.FormEvent) => {
-    alert(newMessage);
     e.preventDefault();
     setLoading(true);
     if (!newMessage.trim() || !selectedChatmate || !currentUser) return;
@@ -116,7 +113,6 @@ export function useChatMessages(conversationID?: string, currentUser?: string) {
       console.error("⚠️ Unexpected error creating conversation:", error);
     }
     setLoading(false);
-    alert("sendMessageNewConversation called");
   };
 
   return {

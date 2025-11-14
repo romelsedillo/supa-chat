@@ -93,7 +93,7 @@ export default function ChatMateList() {
               }`}
             ></div>
           </div>
-          {mate.name}
+          <h3 className="font-medium capitalize">{mate.name}</h3>
           <div className="ml-auto">
             <ChatMateOptions />
           </div>
