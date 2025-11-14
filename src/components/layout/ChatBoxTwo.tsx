@@ -18,9 +18,8 @@ type Message = {
 };
 
 const ChatBoxTwo = () => {
-  const { loading, setLoading, selectedChatmate, messages, setMessages } =
+  const { selectedChatmate, messages, setMessages, newMessage, setNewMessage } =
     useChatStore();
-  const [newMessage, setNewMessage] = useState("");
   const [conversationID, setConversationId] = useState<string>("");
   const [currentUser, setCurrentUser] = useState<string>("");
   const [newConversation, setNewConversation] = useState(false);
@@ -40,14 +39,14 @@ const ChatBoxTwo = () => {
   }, []);
   // Fetch messages when selectedChatmate changes
   const fetchMessages = useCallback(async () => {
-    if (!selectedChatmate || !currentUser) return;
+    // if (!selectedChatmate || !currentUser) return;
+    if (!selectedChatmate) return;
 
     const { data } = await supabase
       .from("messages")
       .select("*")
       .or(
-        `and(sender_id.eq.${currentUser},receiver_id.eq.${selectedChatmate.id}),
-         and(sender_id.eq.${selectedChatmate.id},receiver_id.eq.${currentUser})`
+        `and(sender_id.eq.${currentUser},receiver_id.eq.${selectedChatmate.id}),and(sender_id.eq.${selectedChatmate.id},receiver_id.eq.${currentUser})`
       )
       .order("created_at", { ascending: true });
 
@@ -136,10 +135,7 @@ const ChatBoxTwo = () => {
       <h2 className="font-semibold text-white mb-2">
         {selectedChatmate?.name}
       </h2>
-      <MessageList
-        messages={messages}
-        currentUser={currentUser}
-      />
+      <MessageList messages={messages} currentUser={currentUser} />
       <MessageInput
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}

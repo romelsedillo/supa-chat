@@ -3,21 +3,21 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "@/store/chatStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ChatMateOptions from "../modals/ChatMateOptions";
 
 type UserProfile = {
   id: string;
   name: string;
   avatar_url?: string | null;
+  is_online: boolean;
 };
-
 
 export default function ChatMateList() {
   const supabase = createClientComponentClient();
   const { selectedChatmate, setSelectedChatmate } = useChatStore();
   const [chatmates, setChatmates] = useState<UserProfile[]>([]);
 
-  
-  
   useEffect(() => {
     const fetchChatmates = async () => {
       const { data: userData } = await supabase.auth.getUser();
@@ -44,45 +44,59 @@ export default function ChatMateList() {
       // 3️⃣ Fetch their user profiles
       const { data: users } = await supabase
         .from("user_profiles")
-        .select("id, name, avatar_url")
+        .select("id, name, avatar_url, is_online")
         .in("id", Array.from(chatmateIds));
 
       if (users) setChatmates(users);
     };
 
     fetchChatmates();
-     const channel = supabase
-    .channel("chatmates-realtime")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "messages" },
-      async (payload) => {
-        // 🔁 Re-fetch chatmates when new message is inserted
-        fetchChatmates();
-      }
-    )
-    .subscribe();
+    const channel = supabase
+      .channel("chatmates-realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages" },
+        async () => {
+          // 🔁 Re-fetch chatmates when new message is inserted
+          fetchChatmates();
+        }
+      )
+      .subscribe();
 
-  return () => {
-    supabase.removeChannel(channel);
-  };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [supabase]);
 
   return (
-    <div className="col-span-3 bg-[#111] p-3 text-white rounded-s-lg">
+    <div className="col-span-3 p-3 text-white rounded-s-lg">
       <h2 className="font-semibold mb-2">Chats</h2>
 
       {chatmates.map((mate) => (
         <div
           key={mate.id}
           onClick={() => setSelectedChatmate(mate)}
-          className={`p-2 rounded cursor-pointer ${
+          className={`p-2 rounded cursor-pointer flex items-center gap-2 ${
             selectedChatmate?.id === mate.id
               ? "bg-[#222]"
               : "hover:bg-[#1a1a1a]"
           }`}
         >
+          <div className="relative">
+            <Avatar>
+              <AvatarImage src={mate.avatar_url || ""} />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <div
+              className={`absolute top-6 left-6 w-2 h-2 rounded-full ${
+                mate.is_online ? "bg-green-500" : "bg-gray-500"
+              }`}
+            ></div>
+          </div>
           {mate.name}
+          <div className="ml-auto">
+            <ChatMateOptions />
+          </div>
         </div>
       ))}
 

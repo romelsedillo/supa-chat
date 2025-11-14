@@ -1,6 +1,5 @@
 import React from "react";
 import SideBar from "@/components/layout/SideBar";
-import ChatBox from "@/components/layout/ChatBox";
 import OnlineStatusUpdater from "@/components/modals/OnlineStatusUpdater";
 import ChatBoxTwo from "@/components/layout/ChatBoxTwo";
 export default function Home() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useChatStore } from "@/store/chatStore";
 
@@ -10,13 +10,19 @@ import { useChatStore } from "@/store/chatStore";
 // };
 
 export function useChatMessages(conversationID?: string, currentUser?: string) {
-  const { setLoading, selectedChatmate, messages, setMessages } =
-    useChatStore();
+  const {
+    setLoading,
+    selectedChatmate,
+    messages,
+    setMessages,
+    newMessage,
+    setNewMessage,
+  } = useChatStore();
   const [newConversation, setNewConversation] = useState(false);
-  const [newMessage, setNewMessage] = useState("");
 
   // Sending message function for existing conversation
   const sendMessage = async (e: React.FormEvent) => {
+    alert(newMessage);
     e.preventDefault();
     if (!newMessage.trim() || !selectedChatmate) return;
 
@@ -41,6 +47,7 @@ export function useChatMessages(conversationID?: string, currentUser?: string) {
 
   // Sending message function for new conversation
   const sendMessageNewConversation = async (e: React.FormEvent) => {
+    alert(newMessage);
     e.preventDefault();
     setLoading(true);
     if (!newMessage.trim() || !selectedChatmate || !currentUser) return;

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import DeleteConversation from "./DeleteConversation";
 import BlockConversation from "./BlockConversation";
 
-export default function ChatOptions() {
+export default function ChatMateOptions() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

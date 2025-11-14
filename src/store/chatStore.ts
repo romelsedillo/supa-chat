@@ -20,6 +20,8 @@ type Message = {
 interface ChatStore {
   loading: boolean;
   setLoading: (state: boolean) => void;
+  newMessage: string;
+  setNewMessage: (value: string) => void;
   selectedChatmate: UserProfile | null;
   conversationId: string | null;
   messages: Message[];
@@ -33,6 +35,8 @@ interface ChatStore {
 export const useChatStore = create<ChatStore>((set) => ({
   loading: false,
   setLoading: (state) => set({ loading: state }),
+  newMessage: "",
+  setNewMessage: (value) => set({ newMessage: value }),
   selectedChatmate: null,
   conversationId: null,
   messages: [],

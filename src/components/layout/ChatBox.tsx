@@ -38,10 +38,10 @@ export default function ChatBox() {
       .from("messages")
       .select("*")
       .or(
-        `and(sender_id.eq.${currentUser},receiver_id.eq.${selectedChatmate.id}),and(sender_id.eq.${selectedChatmate.id},receiver_id.eq.${currentUser})`
+        `and(sender_id.eq.${currentUser},receiver_id.eq.${selectedChatmate.id}),
+        and(sender_id.eq.${selectedChatmate.id},receiver_id.eq.${currentUser})`
       )
       .order("created_at", { ascending: true });
-    // id data = empty
 
     if (!data || data.length === 0) {
       // ✅ No existing conversation — this will trigger "new conversation" flow
