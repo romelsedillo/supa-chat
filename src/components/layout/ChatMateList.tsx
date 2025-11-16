@@ -5,6 +5,7 @@ import { useChatStore } from "@/store/chatStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ChatMateOptions from "../modals/ChatMateOptions";
+import { usePresenceStore } from "@/store/usePresence";
 
 type UserProfile = {
   id: string;
@@ -14,9 +15,28 @@ type UserProfile = {
 };
 
 export default function ChatMateList() {
+  const initPresence = usePresenceStore((state) => state.initPresence);
+  const { isOnline } = usePresenceStore();
   const supabase = createClientComponentClient();
   const { selectedChatmate, setSelectedChatmate } = useChatStore();
   const [chatmates, setChatmates] = useState<UserProfile[]>([]);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      const userId = data?.user?.id;
+
+      if (!userId) return;
+
+      initPresence(userId);
+    };
+
+    loadUser();
+
+    return () => {
+      supabase.removeChannel(supabase.channel("online-users"));
+    };
+  }, [initPresence, supabase]);
 
   useEffect(() => {
     const fetchChatmates = async () => {
@@ -66,7 +86,7 @@ export default function ChatMateList() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, [supabase, initPresence]);
 
   return (
     <div className="col-span-3 p-3 text-white rounded-s-lg">
@@ -89,7 +109,7 @@ export default function ChatMateList() {
             </Avatar>
             <div
               className={`absolute top-6 left-6 w-2 h-2 rounded-full ${
-                mate.is_online ? "bg-green-500" : "bg-gray-500"
+                isOnline(mate.id) ? "bg-green-500" : "bg-gray-500"
               }`}
             ></div>
           </div>

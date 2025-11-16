@@ -92,7 +92,6 @@ const ChatBoxTwo = () => {
               newMessage.receiver_id === currentUser);
 
           if (isRelevant) {
-            console.log("📩 New message received:");
             setMessages((prev) => [...prev, newMessage]);
           }
         }
@@ -132,7 +131,6 @@ const ChatBoxTwo = () => {
         Select a chatmate
       </div>
     );
-  console.log("Selected Chatmate:", selectedChatmate);
   return (
     <div className="col-span-9 flex flex-col p-4 border border-gray-800 rounded-e-lg">
       <div className="flex items-center gap-2 mb-4">
