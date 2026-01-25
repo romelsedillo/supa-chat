@@ -46,12 +46,12 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  // OAuth login
-  const handleOAuthLogin = async (provider: "google" | "github") => {
+  // Github login
+  const handleGithubLogin = async () => {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithOAuth({
-      provider,
+      provider: "github",
     });
 
     setLoading(false);
@@ -59,7 +59,23 @@ const LoginForm: React.FC = () => {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success(`Redirecting to ${provider}...`);
+      toast.success(`Redirecting to Github login...`);
+    }
+  };
+  // Google login
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+
+    setLoading(false);
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(`Redirecting to Google login...`);
     }
   };
 
@@ -129,7 +145,7 @@ const LoginForm: React.FC = () => {
       <div className="max-w-xs flex flex-col items-center mx-auto py-2 gap-2">
         <Button
           type="button"
-          onClick={() => handleOAuthLogin("google")}
+          onClick={() => handleGoogleLogin}
           className="w-full rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
         >
           Google
@@ -137,7 +153,7 @@ const LoginForm: React.FC = () => {
         </Button>
         <Button
           type="button"
-          onClick={() => handleOAuthLogin("github")}
+          onClick={() => handleGithubLogin}
           className="w-full rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
         >
           GitHub
