@@ -48,34 +48,34 @@ const LoginForm: React.FC = () => {
 
   // Github login
   const handleGithubLogin = async () => {
-    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "github",
+      });
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-    });
+      if (error) throw new Error(error.message);
 
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success(`Redirecting to Github login...`);
+      toast.success("Redirecting to GitHub login...");
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error("GitHub login error:", err.message);
+      toast.error("GitHub login failed. Please try again.");
     }
   };
   // Google login
   const handleGoogleLogin = async () => {
-    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+      });
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
+      if (error) throw new Error(error.message);
 
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success(`Redirecting to Google login...`);
+      toast.success("Redirecting to Google login...");
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.log("Google login error:", err.message);
+      toast.error("Google login failed. Please try again.");
     }
   };
 
