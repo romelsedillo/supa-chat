@@ -145,7 +145,7 @@ const LoginForm: React.FC = () => {
       <div className="max-w-xs flex flex-col items-center mx-auto py-2 gap-2">
         <Button
           type="button"
-          onClick={() => handleGoogleLogin}
+          onClick={handleGoogleLogin}
           className="w-full rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
         >
           Google
@@ -153,7 +153,7 @@ const LoginForm: React.FC = () => {
         </Button>
         <Button
           type="button"
-          onClick={() => handleGithubLogin}
+          onClick={handleGithubLogin}
           className="w-full rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
         >
           GitHub
