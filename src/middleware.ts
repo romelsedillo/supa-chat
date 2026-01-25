@@ -1,4 +1,3 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
@@ -13,12 +12,12 @@ export async function middleware(req: NextRequest) {
 
   const pathname = req.nextUrl.pathname;
 
-  // ✅ allow callback route
+  // ✅ allow auth callback
   if (pathname.startsWith("/auth/callback")) {
     return res;
   }
 
-  // Not logged in → redirect to /login
+  // ❌ Not logged in → redirect to /login
   if (
     !user &&
     pathname !== "/login" &&
@@ -26,12 +25,18 @@ export async function middleware(req: NextRequest) {
     pathname !== "/password-recovery" &&
     pathname !== "/update-password"
   ) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    const redirectUrl = new URL("/login", req.url);
+    return NextResponse.redirect(redirectUrl, {
+      headers: res.headers, // 🔥 PRESERVE COOKIES
+    });
   }
 
-  // Logged in but trying to visit login/sign-up → go to chatroom
+  // ❌ Logged in but trying to visit login/sign-up
   if (user && (pathname === "/login" || pathname === "/sign-up")) {
-    return NextResponse.redirect(new URL("/", req.url));
+    const redirectUrl = new URL("/", req.url);
+    return NextResponse.redirect(redirectUrl, {
+      headers: res.headers, // 🔥 PRESERVE COOKIES
+    });
   }
 
   return res;
