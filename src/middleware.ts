@@ -1,8 +1,16 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 
 export async function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+
+  // 🚨 EXIT EARLY — DO NOT TOUCH SUPABASE HERE
+  if (pathname.startsWith("/auth/callback")) {
+    return NextResponse.next();
+  }
+
   const res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
 
@@ -10,14 +18,7 @@ export async function middleware(req: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const pathname = req.nextUrl.pathname;
-
-  // ✅ allow auth callback
-  if (pathname.startsWith("/auth/callback")) {
-    return res;
-  }
-
-  // ❌ Not logged in → redirect to /login
+  // Not logged in → redirect
   if (
     !user &&
     pathname !== "/login" &&
@@ -25,17 +26,15 @@ export async function middleware(req: NextRequest) {
     pathname !== "/password-recovery" &&
     pathname !== "/update-password"
   ) {
-    const redirectUrl = new URL("/login", req.url);
-    return NextResponse.redirect(redirectUrl, {
-      headers: res.headers, // 🔥 PRESERVE COOKIES
+    return NextResponse.redirect(new URL("/login", req.url), {
+      headers: res.headers, // ✅ preserve cookies
     });
   }
 
-  // ❌ Logged in but trying to visit login/sign-up
+  // Logged in but visiting auth pages
   if (user && (pathname === "/login" || pathname === "/sign-up")) {
-    const redirectUrl = new URL("/", req.url);
-    return NextResponse.redirect(redirectUrl, {
-      headers: res.headers, // 🔥 PRESERVE COOKIES
+    return NextResponse.redirect(new URL("/", req.url), {
+      headers: res.headers,
     });
   }
 
