@@ -22,18 +22,18 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div className="relative">
+    <div className="relative p-2 border-t border-gray-800">
       {/* Emoji Picker */}
       {showEmoji && (
         <div className="absolute bottom-14 left-0 z-50">
           <EmojiPicker onEmojiClick={handleEmojiClick} />
         </div>
       )}
-      <form onSubmit={onSubmit} className="flex gap-2 mt-3">
+      <form onSubmit={onSubmit} className="flex gap-2">
         <button
           type="button"
           onClick={() => setShowEmoji((prev) => !prev)}
-          className="bg-gray-700 px-3 flex items-center justify-center rounded text-white"
+          className="bg-gray-700 px-3 flex items-center justify-center rounded text-white cursor-pointer hover:bg-gray-600"
         >
           <Smile className="w-5 h-5" />
         </button>

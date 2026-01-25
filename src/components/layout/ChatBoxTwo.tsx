@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useChatStore } from "@/store/chatStore";
 import ChatMateOptions from "../modals/ChatMateOptions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { usePresenceStore } from "@/store/usePresence";
 
 type Message = {
   id: string;
@@ -22,13 +23,14 @@ type Message = {
 const ChatBoxTwo = () => {
   const { selectedChatmate, messages, setMessages, newMessage, setNewMessage } =
     useChatStore();
+  const { isOnline } = usePresenceStore();
   const [conversationID, setConversationId] = useState<string>("");
   const [currentUser, setCurrentUser] = useState<string>("");
   const [newConversation, setNewConversation] = useState(false);
 
   const { sendMessage, sendMessageNewConversation } = useChatMessages(
     conversationID,
-    currentUser
+    currentUser,
   );
 
   // Get logged-in user
@@ -48,7 +50,7 @@ const ChatBoxTwo = () => {
       .from("messages")
       .select("*")
       .or(
-        `and(sender_id.eq.${currentUser},receiver_id.eq.${selectedChatmate.id}),and(sender_id.eq.${selectedChatmate.id},receiver_id.eq.${currentUser})`
+        `and(sender_id.eq.${currentUser},receiver_id.eq.${selectedChatmate.id}),and(sender_id.eq.${selectedChatmate.id},receiver_id.eq.${currentUser})`,
       )
       .order("created_at", { ascending: true });
 
@@ -94,7 +96,7 @@ const ChatBoxTwo = () => {
           if (isRelevant) {
             setMessages((prev) => [...prev, newMessage]);
           }
-        }
+        },
       )
       .subscribe();
 
@@ -114,7 +116,7 @@ const ChatBoxTwo = () => {
           fetchMessages();
           // Optional: refresh chatmates or conversation metadata
           // e.g. refetch chat list, or update conversation info in Zustand
-        }
+        },
       )
       .subscribe();
 
@@ -132,8 +134,8 @@ const ChatBoxTwo = () => {
       </div>
     );
   return (
-    <div className="col-span-9 flex flex-col p-4 border border-gray-800 rounded-e-lg">
-      <div className="flex items-center gap-2 mb-4">
+    <div className="col-span-9 flex flex-col border border-gray-800 rounded-e-lg">
+      <div className="flex items-center gap-2 mb-4 border-b border-gray-800 p-3">
         <div className="relative">
           <Avatar>
             <AvatarImage src={selectedChatmate.avatar_url || ""} />
@@ -141,7 +143,7 @@ const ChatBoxTwo = () => {
           </Avatar>
           <div
             className={`absolute top-6 left-6 w-2 h-2 rounded-full ${
-              selectedChatmate.is_online ? "bg-green-500" : "bg-gray-500"
+              isOnline(selectedChatmate?.id) ? "bg-green-500" : "bg-gray-500"
             }
           }`}
           ></div>

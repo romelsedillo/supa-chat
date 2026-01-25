@@ -52,7 +52,7 @@ export default function ChatMateList() {
 
       if (!messages) return;
 
-      // 2️⃣ Collect unique chatmate IDs
+      // 2️⃣ Collect unique chatMate IDs
       const chatmateIds = new Set();
       messages.forEach((msg) => {
         if (msg.sender_id === userId) chatmateIds.add(msg.receiver_id);
@@ -77,7 +77,7 @@ export default function ChatMateList() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "messages" },
         async () => {
-          // 🔁 Re-fetch chatmates when new message is inserted
+          // 🔁 Re-fetch chatMates when new message is inserted
           fetchChatmates();
         }
       )
@@ -121,7 +121,7 @@ export default function ChatMateList() {
       ))}
 
       {chatmates.length === 0 && (
-        <p className="text-gray-500 text-sm">No chatmates yet</p>
+        <p className="text-gray-500 text-sm">No chatmates yet.</p>
       )}
     </div>
   );

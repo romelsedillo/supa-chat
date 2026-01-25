@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useChatStore } from "@/store/chatStore";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Message {
   id: string;
@@ -19,19 +20,19 @@ const MessageList: React.FC<MessageListProps> = ({ messages, currentUser }) => {
   const { loading } = useChatStore();
   if (loading) {
     return (
-      <div className="flex-1 overflow-y-auto bg-[#111] p-3 rounded text-white space-y-2"></div>
+      <div className="flex-1 overflow-y-auto bg-transparent p-3 rounded text-white space-y-2"></div>
     );
   }
   return (
-    <div className="flex-1 overflow-y-auto bg-[#222] p-3 rounded text-white space-y-2">
+    <div className="flex-1 overflow-y-auto bg-transparent rounded text-white space-y-2">
       {loading ? (
-        <div className="flex-1 overflow-y-auto bg-[#111] p-3 rounded text-white space-y-2"></div>
+        <div className="flex-1 overflow-y-auto bg-transparent p-3 rounded text-white space-y-2"></div>
       ) : (
-        <div className="flex-1 overflow-y-auto p-3 rounded text-white space-y-2">
+        <ScrollArea className="px-3 rounded text-white space-y-2 h-full">
           {messages.map((m) => (
             <div
               key={m.id}
-              className={`${
+              className={`my-2 ${
                 m.sender_id === currentUser ? "text-right" : "text-left"
               }`}
             >
@@ -44,7 +45,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, currentUser }) => {
               </p>
             </div>
           ))}
-        </div>
+        </ScrollArea>
       )}
     </div>
   );
