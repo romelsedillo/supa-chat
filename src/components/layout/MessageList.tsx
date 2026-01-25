@@ -13,7 +13,7 @@ interface Message {
 
 interface MessageListProps {
   messages: Message[];
-  currentUser: string;
+  currentUser?: string;
 }
 
 const MessageList: React.FC<MessageListProps> = ({ messages, currentUser }) => {
