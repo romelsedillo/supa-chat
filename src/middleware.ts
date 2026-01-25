@@ -1,31 +1,37 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { updateSession } from "@/lib/supabase/middleware";
+// middleware.ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 
 export async function middleware(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
-
-  // ✅ Always allow callback
-  if (pathname.startsWith("/auth/callback")) {
-    return NextResponse.next();
-  }
-
-  // 🔥 MUST await this
-  const { supabase, res } = await updateSession(req);
+  const res = NextResponse.next();
+  const supabase = createMiddlewareClient({ req, res });
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && pathname !== "/login" && pathname !== "/sign-up") {
-    return NextResponse.redirect(new URL("/login", req.url), {
-      headers: res.headers,
-    });
+  const pathname = req.nextUrl.pathname;
+
+  // ✅ allow callback route
+  if (pathname.startsWith("/auth/callback")) {
+    return res;
   }
 
+  // Not logged in → redirect to /login
+  if (
+    !user &&
+    pathname !== "/login" &&
+    pathname !== "/sign-up" &&
+    pathname !== "/password-recovery" &&
+    pathname !== "/update-password"
+  ) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // Logged in but trying to visit login/sign-up → go to chatroom
   if (user && (pathname === "/login" || pathname === "/sign-up")) {
-    return NextResponse.redirect(new URL("/", req.url), {
-      headers: res.headers,
-    });
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   return res;
