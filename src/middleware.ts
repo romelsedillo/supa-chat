@@ -1,37 +1,27 @@
-// middleware.ts
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { NextResponse, type NextRequest } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  // 🚨 EXIT EARLY — DO NOT TOUCH SUPABASE HERE
+  // ✅ Always allow callback
   if (pathname.startsWith("/auth/callback")) {
     return NextResponse.next();
   }
 
-  const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req, res });
+  // 🔥 MUST await this
+  const { supabase, res } = await updateSession(req);
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Not logged in → redirect
-  if (
-    !user &&
-    pathname !== "/login" &&
-    pathname !== "/sign-up" &&
-    pathname !== "/password-recovery" &&
-    pathname !== "/update-password"
-  ) {
+  if (!user && pathname !== "/login" && pathname !== "/sign-up") {
     return NextResponse.redirect(new URL("/login", req.url), {
-      headers: res.headers, // ✅ preserve cookies
+      headers: res.headers,
     });
   }
 
-  // Logged in but visiting auth pages
   if (user && (pathname === "/login" || pathname === "/sign-up")) {
     return NextResponse.redirect(new URL("/", req.url), {
       headers: res.headers,
