@@ -52,7 +52,6 @@ const LoginForm: React.FC = () => {
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-     
     });
 
     setLoading(false);
