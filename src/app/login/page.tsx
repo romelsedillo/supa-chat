@@ -12,6 +12,17 @@ const LoginPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        router.replace("/");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
+  useEffect(() => {
     const checkUser = async () => {
       const { data, error } = await supabase.auth.getUser();
 
