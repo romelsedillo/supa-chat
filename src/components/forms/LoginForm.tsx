@@ -9,10 +9,10 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabaseClient";
 const LoginForm: React.FC = () => {
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
