@@ -9,8 +9,10 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { supabase } from "@/lib/supabaseClient";
+
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
 const LoginForm: React.FC = () => {
   // const supabase = createClientComponentClient();
   const router = useRouter();
@@ -70,6 +72,9 @@ const LoginForm: React.FC = () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
 
       if (error) throw new Error(error.message);

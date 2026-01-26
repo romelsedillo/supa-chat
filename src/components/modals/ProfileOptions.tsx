@@ -10,12 +10,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabaseClient";
+
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const ProfileOptions = () => {
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
 
   const handleLogout = async () => {
     try {
