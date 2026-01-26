@@ -15,14 +15,13 @@ const LoginPage = () => {
     const checkUser = async () => {
       const { data, error } = await supabase.auth.getUser();
 
-      if (data.user && !error) {
-        // ✅ already logged in → go home
-        router.replace("/");
-        return;
-      }
-
-      // ❌ not logged in → show login
-      setLoading(false);
+      setTimeout(() => {
+        if (data.user && !error) {
+          router.replace("/");
+        } else {
+          setLoading(false);
+        }
+      }, 2000);
     };
 
     checkUser();
