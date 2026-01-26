@@ -11,13 +11,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { supabase } from "@/lib/supabaseClient";
+// import { supabase } from "@/lib/supabaseClient";
 
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const ProfileOptions = () => {
   const router = useRouter();
-  // const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient();
 
   const handleLogout = async () => {
     try {

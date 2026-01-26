@@ -1,6 +1,8 @@
-import { supabase } from "@/lib/supabaseClient";
+// import { supabase } from "@/lib/supabaseClient";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export async function getUserProfile() {
+  const supabase = createClientComponentClient();
   const {
     data: { user },
     error: userError,

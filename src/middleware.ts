@@ -1,9 +1,11 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+// import { supabase } from "@/lib/supabaseClient";
 
 export async function middleware(req: NextRequest) {
+  const supabase = createClientComponentClient();
   const res = NextResponse.next();
   const {
     data: { user },
@@ -14,6 +16,7 @@ export async function middleware(req: NextRequest) {
     return res;
   }
   // Not logged in → redirect to /login
+  console.log("Middleware check - user:", user);
   if (
     !user &&
     pathname !== "/login" &&
@@ -21,7 +24,7 @@ export async function middleware(req: NextRequest) {
     pathname !== "/password-recovery" &&
     pathname !== "/update-password"
   ) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(new URL("/", req.url));
   }
   // Logged in but trying to visit login/sign-up → go to chatroom
   if (user && (pathname === "/login" || pathname === "/sign-up")) {
