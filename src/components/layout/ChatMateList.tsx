@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useChatStore } from "@/store/chatStore";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabaseClient";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ChatMateOptions from "../modals/ChatMateOptions";
 import { usePresenceStore } from "@/store/usePresence";
@@ -17,7 +17,6 @@ type UserProfile = {
 export default function ChatMateList() {
   const initPresence = usePresenceStore((state) => state.initPresence);
   const { isOnline } = usePresenceStore();
-  const supabase = createClientComponentClient();
   const { selectedChatmate, setSelectedChatmate } = useChatStore();
   const [chatmates, setChatmates] = useState<UserProfile[]>([]);
 
@@ -79,7 +78,7 @@ export default function ChatMateList() {
         async () => {
           // 🔁 Re-fetch chatMates when new message is inserted
           fetchChatmates();
-        }
+        },
       )
       .subscribe();
 
