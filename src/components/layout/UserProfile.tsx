@@ -22,6 +22,7 @@ const UserProfile = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  console.log("UserProfile render:", { profile, loading });
   if (loading) {
     return (
       <div className="flex items-center">
