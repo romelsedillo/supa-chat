@@ -53,9 +53,6 @@ const LoginForm: React.FC = () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "github",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
       });
 
       if (error) throw new Error(error.message);
@@ -72,9 +69,6 @@ const LoginForm: React.FC = () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
       });
 
       if (error) throw new Error(error.message);
