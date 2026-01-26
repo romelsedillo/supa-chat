@@ -1,6 +1,4 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-
-const supabase = createClientComponentClient();
+import { supabase } from "@/lib/supabaseClient";
 
 type UserProfileType = {
   id: string;
