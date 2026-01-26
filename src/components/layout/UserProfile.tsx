@@ -33,7 +33,7 @@ const UserProfile = () => {
       </div>
     );
   }
-
+  console.log(profile);
   return (
     <div className="flex items-center">
       <Avatar className="w-12 h-12 border-2 border-violet-500">
