@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
     pathname !== "/password-recovery" &&
     pathname !== "/update-password"
   ) {
-    return NextResponse.redirect(new URL("/", req.url));
+    return NextResponse.redirect(new URL("/login", req.url));
   }
   // Logged in but trying to visit login/sign-up → go to chatroom
   if (user && (pathname === "/login" || pathname === "/sign-up")) {
