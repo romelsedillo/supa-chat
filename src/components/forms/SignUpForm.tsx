@@ -10,10 +10,9 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabaseClient";
 
 const SignUpForm: React.FC = () => {
-  const supabase = createClientComponentClient();
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -39,7 +38,7 @@ const SignUpForm: React.FC = () => {
         toast.error("Signup failed: " + error.message);
       } else {
         toast.success(
-          "Signup successful! Please check your email to confirm your account."
+          "Signup successful! Please check your email to confirm your account.",
         );
         router.push("/"); // Redirect to login after registration
       }

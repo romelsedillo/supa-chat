@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner"; // Optional: for feedback notifications
 import Link from "next/link";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabaseClient";
+
 
 const PasswordRecoveryForm = () => {
-  const supabase = createClientComponentClient();
+
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 

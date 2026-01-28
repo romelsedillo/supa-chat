@@ -5,11 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Link from "next/link";
-
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabaseClient";
 
 const UpdatePasswordForm = () => {
-  const supabase = createClientComponentClient();
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
