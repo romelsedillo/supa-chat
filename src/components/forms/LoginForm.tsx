@@ -9,12 +9,12 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-// import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const LoginForm: React.FC = () => {
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -48,36 +48,20 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  // Github login
-  const handleGithubLogin = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "github",
-      });
+  // OAuth login
+  const handleOAuthLogin = async (provider: "google" | "github") => {
+    setLoading(true);
 
-      if (error) throw new Error(error.message);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+    });
 
-      toast.success("Redirecting to GitHub login...");
-    } catch (error: unknown) {
-      const err = error as Error;
-      console.error("GitHub login error:", err.message);
-      toast.error("GitHub login failed. Please try again.");
-    }
-  };
-  // Google login
-  const handleGoogleLogin = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-      });
+    setLoading(false);
 
-      if (error) throw new Error(error.message);
-
-      toast.success("Redirecting to Google login...");
-    } catch (error: unknown) {
-      const err = error as Error;
-      console.log("Google login error:", err.message);
-      toast.error("Google login failed. Please try again.");
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(`Redirecting to ${provider}...`);
     }
   };
 
@@ -147,7 +131,7 @@ const LoginForm: React.FC = () => {
       <div className="max-w-xs flex flex-col items-center mx-auto py-2 gap-2">
         <Button
           type="button"
-          onClick={handleGoogleLogin}
+          onClick={() => handleOAuthLogin("google")}
           className="w-full rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
         >
           Google
@@ -155,7 +139,7 @@ const LoginForm: React.FC = () => {
         </Button>
         <Button
           type="button"
-          onClick={handleGithubLogin}
+          onClick={() => handleOAuthLogin("github")}
           className="w-full rounded bg-gradient-to-r from-violet-500 to-violet-800 cursor-pointer"
         >
           GitHub

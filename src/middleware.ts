@@ -1,37 +1,24 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-// import { supabase } from "@/lib/supabaseClient";
-
-export async function middleware(req: NextRequest) {
-  const supabase = createClientComponentClient();
-  const res = NextResponse.next();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
-  // ✅ allow callback route
-  if (pathname.startsWith("/auth/callback")) {
-    return res;
-  }
-  // Not logged in → redirect to /login
-  console.log("Middleware check - user:", user);
+
+  // allow public routes
   if (
-    !user &&
-    pathname !== "/login" &&
-    pathname !== "/sign-up" &&
-    pathname !== "/password-recovery" &&
-    pathname !== "/update-password"
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/sign-up") ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/_next")
   ) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.next();
   }
-  // Logged in but trying to visit login/sign-up → go to chatroom
-  if (user && (pathname === "/login" || pathname === "/sign-up")) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-  return res;
+
+  // let pages handle auth
+  return NextResponse.next();
 }
+
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!favicon.ico).*)"],
 };

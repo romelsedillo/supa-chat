@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabaseClient";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
 export default function OnlineStatusUpdater() {
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
   useEffect(() => {
     const updateOnlineStatus = async () => {
       const {
@@ -35,7 +37,7 @@ export default function OnlineStatusUpdater() {
 
     window.addEventListener("beforeunload", handleUnload);
     return () => window.removeEventListener("beforeunload", handleUnload);
-  }, [supabase]);
+  }, []);
 
   return null;
 }

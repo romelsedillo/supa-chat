@@ -1,9 +1,10 @@
 "use client";
 
 import { create } from "zustand";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabaseClient";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const supabase = createClientComponentClient();
+// const supabase = createClientComponentClient();
 
 // Type for presence entries from Supabase
 type PresenceEntry = { online: boolean };

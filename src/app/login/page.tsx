@@ -1,7 +1,9 @@
 import IllustrationComp from "@/components/layout/IllustrationComp";
 import LoginForm from "@/components/forms/LoginForm";
+import { supabase } from "@/lib/supabaseClient";
 
 const LoginPage = () => {
+  // console.log("LoginPage supabase:", supabase.auth.getUser());
   return (
     <div className="bg-[#0A0A0A] border-2 border-gray-800 rounded-lg h-[560px] w-full overflow-hidden max-w-5xl flex">
       {/* Left Section with Title + Illustration */}
