@@ -9,7 +9,6 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
 import { supabase } from "@/lib/supabaseClient";
 
 const SignUpForm: React.FC = () => {
@@ -59,9 +58,6 @@ const SignUpForm: React.FC = () => {
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
     });
 
     setLoading(false);
@@ -156,7 +152,7 @@ const SignUpForm: React.FC = () => {
       <div className="mx-auto max-w-xs mt-4">
         <p className="text-xs text-white">
           Already have an account?{" "}
-          <Link href="/" className="font-medium underline">
+          <Link href="/login" className="font-medium underline">
             Sign in here.
           </Link>
         </p>

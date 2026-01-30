@@ -16,7 +16,7 @@ export async function getUserInfo(): Promise<UserProfileType | null> {
   } = await supabase.auth.getUser();
 
   if (error || !user) {
-    console.error("Error fetching user:", error?.message);
+    console.log("Error fetching user:", error?.message);
     return null;
   }
 

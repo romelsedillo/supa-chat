@@ -3,12 +3,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import MessageInput from "../forms/MessageInput";
-import MessageList from "../layout/MessageList";
+import MessageList from "./MessageList";
 import { supabase } from "@/lib/supabaseClient";
 import { useChatStore } from "@/store/chatStore";
 import ChatMateOptions from "../modals/ChatMateOptions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePresenceStore } from "@/store/usePresence";
+import { Button } from "../ui/button";
 
 type Message = {
   id: string;
@@ -20,13 +21,14 @@ type Message = {
   created_at: string;
 };
 
-const ChatBoxTwo = () => {
+const MobileChatBox = () => {
   const { selectedChatmate, messages, setMessages, newMessage, setNewMessage } =
     useChatStore();
   const { isOnline } = usePresenceStore();
   const [conversationID, setConversationId] = useState<string>("");
   const [currentUser, setCurrentUser] = useState<string>("");
   const [newConversation, setNewConversation] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { sendMessage, sendMessageNewConversation } = useChatMessages(
     conversationID,
@@ -126,15 +128,32 @@ const ChatBoxTwo = () => {
       supabase.removeChannel(conversationsChannel);
     };
   }, [selectedChatmate, currentUser, setMessages, fetchMessages]);
+  const closeChatBox = () => {
+    useChatStore.getState().setSelectedChatmate(null);
+  };
+  useEffect(() => {
+    if (!selectedChatmate) return;
+    loadMessages();
+  }, [selectedChatmate]);
+  const loadMessages = async () => {
+    setLoading(true);
+
+    // ⏳ wait 1 second
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await fetchMessages(); // your existing function that gets messages
+
+    setLoading(false);
+  };
 
   if (!selectedChatmate)
     return (
-      <div className="hidden sm:flex col-span-10 sm:col-span-7 items-center justify-center text-gray-500 border border-gray-800 rounded-e-lg">
+      <div className="hidden col-span-10 sm:col-span-7 items-center justify-center border border-gray-800 rounded-e-lg">
         Select a chatmate
       </div>
     );
   return (
-    <div className="hidden sm:flex col-span-10 sm:col-span-7 flex-col border border-gray-800 rounded-e-lg">
+    <div className="flex sm:hidden col-span-full sm:col-span-7 flex-col border border-gray-800 rounded-e-lg">
       <div className="flex items-center gap-2 mb-4 border-b border-gray-800 p-3">
         <div className="relative">
           <Avatar>
@@ -154,8 +173,24 @@ const ChatBoxTwo = () => {
         <div className="">
           <ChatMateOptions />
         </div>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={closeChatBox}
+          className="cursor-pointer rounded-full ml-auto"
+        >
+          X
+        </Button>
       </div>
+      {/* {loading ? (
+        <div className="flex-grow flex items-center justify-center">
+          <p className="text-gray-500">Loading messages...</p>
+        </div>
+      ) : (
+        <MessageList messages={messages} currentUser={currentUser} />
+      )} */}
       <MessageList messages={messages} currentUser={currentUser} />
+
       <MessageInput
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
@@ -165,4 +200,4 @@ const ChatBoxTwo = () => {
   );
 };
 
-export default ChatBoxTwo;
+export default MobileChatBox;

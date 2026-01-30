@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "@/store/chatStore";
 import { supabase } from "@/lib/supabaseClient";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import ChatMateOptions from "../modals/ChatMateOptions";
 import { usePresenceStore } from "@/store/usePresence";
 
@@ -106,14 +111,19 @@ export default function ChatMateList() {
               <AvatarImage src={mate.avatar_url || ""} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
+            {/* <AvatarBadge
+              className={`absolute top-6 left-6 w-2 h-2 rounded-full ${
+                isOnline(mate.id) ? "bg-green-500" : "bg-gray-500"
+              }`}
+            /> */}
             <div
               className={`absolute top-6 left-6 w-2 h-2 rounded-full ${
                 isOnline(mate.id) ? "bg-green-500" : "bg-gray-500"
               }`}
             ></div>
           </div>
-          <h3 className="font-medium capitalize">{mate.name}</h3>
-          <div className="ml-auto">
+          <h3 className="flex font-medium capitalize">{mate.name}</h3>
+          <div className="flex ml-auto">
             <ChatMateOptions />
           </div>
         </div>
