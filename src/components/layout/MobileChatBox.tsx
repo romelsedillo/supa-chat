@@ -131,20 +131,6 @@ const MobileChatBox = () => {
   const closeChatBox = () => {
     useChatStore.getState().setSelectedChatmate(null);
   };
-  useEffect(() => {
-    if (!selectedChatmate) return;
-    loadMessages();
-  }, [selectedChatmate]);
-  const loadMessages = async () => {
-    setLoading(true);
-
-    // ⏳ wait 1 second
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    await fetchMessages(); // your existing function that gets messages
-
-    setLoading(false);
-  };
 
   if (!selectedChatmate)
     return (
